@@ -41,47 +41,53 @@ class SerializableField(peewee.TextField):
         return self._cls.deserialize(value)
 
 
-class NumberPool(enum.IntEnum):
-    EVENT = 1
-    SMS_RELAY = 2
+# class NumberPool(enum.IntEnum):
+#     EVENT = 1
+#     SMS_RELAY = 2
 
 
 class Number(BaseModel):
     number = peewee.TextField()
     country = peewee.CharField(default="US")
-    pool = peewee.IntegerField(default=NumberPool.EVENT)
+    # TODO NZ: remove this from the code
+    # pool = peewee.IntegerField(default=NumberPool.EVENT)
     features = peewee.TextField(index=False)
 
 
 Number.add_index(Number.number)
 
 
+# TODO NZ: Rename this. Group?
 class Event(BaseModel):
     # Always required stuff.
     name = peewee.TextField()
     slug = peewee.CharField(unique=True)
 
-    # Number assignement.
+    # Number assignment.
     # Stored as destructured as well to speed things up a little.
     primary_number = peewee.TextField(null=True)
     primary_number_id = peewee.ForeignKeyField(Number, null=True)
     country = peewee.CharField(default="US")
 
+    # TODO NZ: pull these out of the code
     # Information fields.
-    coc_link = peewee.TextField(null=True, index=False)
-    website = peewee.TextField(null=True, index=False)
-    contact_email = peewee.TextField(null=True, index=False)
-    location = peewee.TextField(null=True, index=False)
+    # coc_link = peewee.TextField(null=True, index=False)
+    # website = peewee.TextField(null=True, index=False)
+    # contact_email = peewee.TextField(null=True, index=False)
+    # location = peewee.TextField(null=True, index=False)
+    # sms_greeting = peewee.TextField(null=True, index=False)
 
     # Customizations.
+    # TODO NZ: Change the default greeting message
+    # hint: "Thank you for calling the Code of Conduct hotline"
     voice_greeting = peewee.TextField(null=True, index=False)
-    sms_greeting = peewee.TextField(null=True, index=False)
 
 
 Event.add_index(Event.slug)
 Event.add_index(Event.primary_number)
 
 
+# TODO NZ: Refactor, change this name
 class EventMember(BaseModel):
     """Members are part of the hotline, but not necessarily able to edit
     event details."""
@@ -96,6 +102,7 @@ EventMember.add_index(EventMember.event, EventMember.verified)
 EventMember.add_index(EventMember.number, EventMember.verified)
 
 
+# TODO NZ: Refactor, change this name
 class EventOrganizer(BaseModel):
     """Organizers are able to edit event details, but aren't necessarily part
     of the hotline."""
@@ -109,29 +116,15 @@ class EventOrganizer(BaseModel):
 EventOrganizer.add_index(EventOrganizer.user_id)
 
 
-class SmsChat(BaseModel):
-    timestamp = peewee.DateTimeField(default=datetime.datetime.utcnow)
-    event = peewee.ForeignKeyField(Event)
-    room = SerializableField(hotline.chatroom.Chatroom)
-    relay_number = peewee.CharField()
+# TODO NZ: Remove
+# class SmsChat(BaseModel):
+#     timestamp = peewee.DateTimeField(default=datetime.datetime.utcnow)
+#     event = peewee.ForeignKeyField(Event)
+#     room = SerializableField(hotline.chatroom.Chatroom)
+#     relay_number = peewee.CharField()
 
 
-class SmsChatConnection(BaseModel):
-    """Model used for looking up SMS chats based on a combination of the
-    user's number and the relay number."""
-
-    user_number = peewee.CharField()
-    relay_number = peewee.CharField()
-    user_name = peewee.CharField()
-    smschat = peewee.ForeignKeyField(SmsChat, backref="connections")
-
-    class Meta:
-        primary_key = peewee.CompositeKey("user_number", "relay_number")
-
-
-SmsChatConnection.add_index(SmsChatConnection.user_number)
-
-
+# TODO NZ: Keep the audit log, but remove from the view
 class AuditLog(BaseModel):
     timestamp = peewee.DateTimeField(default=datetime.datetime.utcnow)
     kind = peewee.IntegerField()

@@ -192,62 +192,51 @@ def acquire_number(event: models.Event) -> str:
         return event.primary_number
 
 
+# TODO NZ, remove this method and idea of relays
 def get_unused_relay_numbers_for_event(
     event: models.Event, organizer_numbers: List[str] = [], limit: int = 1
 ) -> List[str]:
+    pass
     # TODO: Should probably be a join, but its unlikely this list will
     # get big enough in the near future to be an issue.
 
     # Find all relays currently being used by this event.
-    used_relay_numbers_query = models.SmsChat.select(models.SmsChat.relay_number).where(
-        models.SmsChat.event == event
-    )
+    # used_relay_numbers_query = models.SmsChat.select(models.SmsChat.relay_number).where(
+    #     models.SmsChat.event == event
+    # )
 
-    used_relay_numbers = [row.relay_number for row in used_relay_numbers_query]
+    # used_relay_numbers = [row.relay_number for row in used_relay_numbers_query]
 
-    # Further refine - don't include relays if they're already assigned to the same organizer
-    # in another event.
-    # Aside: this query might actually be enough to determine all used relays.
-    event_organizers_used_relays_query = models.SmsChatConnection.select(
-        models.SmsChatConnection.relay_number
-    ).where(models.SmsChatConnection.user_number.in_(organizer_numbers))
+    # # Further refine - don't include relays if they're already assigned to the same organizer
+    # # in another event.
+    # # Aside: this query might actually be enough to determine all used relays.
+    # event_organizers_used_relays_query = models.SmsChatConnection.select(
+    #     models.SmsChatConnection.relay_number
+    # ).where(models.SmsChatConnection.user_number.in_(organizer_numbers))
 
-    event_organizers_used_relays = [
-        row.relay_number for row in event_organizers_used_relays_query
-    ]
+    # event_organizers_used_relays = [
+    #     row.relay_number for row in event_organizers_used_relays_query
+    # ]
 
-    # Combine those together into a set.
-    used_relay_numbers = list(set(used_relay_numbers + event_organizers_used_relays))
+    # # Combine those together into a set.
+    # used_relay_numbers = list(set(used_relay_numbers + event_organizers_used_relays))
 
-    # Now find numbers in the SMS RELAY pool that aren't in that set.
-    unused_number_query = (
-        models.Number.select(models.Number.number)
-        .where(models.Number.pool == models.NumberPool.SMS_RELAY)
-        .where(models.Number.country == event.country)
-        .where(models.Number.number.not_in(used_relay_numbers))
-        .limit(limit)
-    )
+    # # Now find numbers in the SMS RELAY pool that aren't in that set.
+    # unused_number_query = (
+    #     models.Number.select(models.Number.number)
+    #     .where(models.Number.pool == models.NumberPool.SMS_RELAY)
+    #     .where(models.Number.country == event.country)
+    #     .where(models.Number.number.not_in(used_relay_numbers))
+    #     .limit(limit)
+    # )
 
-    numbers = [row.number for row in unused_number_query]
+    # numbers = [row.number for row in unused_number_query]
 
-    return numbers
+    # return numbers
 
 
 def get_remaining_relays_for_event(event: models.Event) -> int:
     return len(get_unused_relay_numbers_for_event(event, limit=1000))
-
-
-def find_unused_relay_number(
-    event: models.Event, organizer_numbers: List[str]
-) -> Optional[str]:
-    """Find a relay number that isn't currently used by the event"""
-    numbers = get_unused_relay_numbers_for_event(
-        event, organizer_numbers=organizer_numbers
-    )
-    if not numbers:
-        return None
-    else:
-        return numbers[0]
 
 
 def save_room(

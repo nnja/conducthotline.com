@@ -23,30 +23,6 @@ blueprint = flask.Blueprint("telephony", __name__)
 hotline.database.ext.init_app(blueprint)
 
 
-@csrf.exempt
-@blueprint.route("/telephony/inbound-sms", methods=["POST"])
-def inbound_sms():
-    message = flask.request.get_json()
-
-    logging.info(f"Handling message from {message['msisdn']} to {message['to']}")
-
-    user_number = lowlevel.normalize_e164_number(message["msisdn"])
-    relay_number = lowlevel.normalize_e164_number(message["to"])
-    message_text = message["text"]
-
-    # Maybe handle verification, if this is a response to a verification message.
-    if verification.maybe_handle_verification(user_number, message_text):
-        return "", 204
-
-    # It's not verification, so hand it off to SMS chat
-    try:
-        smschat.handle_message(user_number, relay_number, message_text)
-    except smschat.SmsChatError as err:
-        smschat.handle_sms_chat_error(err, user_number, relay_number)
-
-    return "", 204
-
-
 HOLD_MUSIC = "https://assets.ctfassets.net/j7pfe8y48ry3/530pLnJVZmiUu8mkEgIMm2/dd33d28ab6af9a2d32681ae80004886e/oaklawn-dreams.mp3"
 
 

@@ -117,7 +117,8 @@ def rent_number(
 
             return number
 
-        except nexmo.Error as error:
+        except nexmo.Error as nexmo_error:
+            error = nexmo_error
             continue
 
     raise error
