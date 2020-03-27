@@ -116,14 +116,6 @@ class EventOrganizer(BaseModel):
 EventOrganizer.add_index(EventOrganizer.user_id)
 
 
-# TODO NZ: Remove
-# class SmsChat(BaseModel):
-#     timestamp = peewee.DateTimeField(default=datetime.datetime.utcnow)
-#     event = peewee.ForeignKeyField(Event)
-#     room = SerializableField(hotline.chatroom.Chatroom)
-#     relay_number = peewee.CharField()
-
-
 # TODO NZ: Keep the audit log, but remove from the view
 class AuditLog(BaseModel):
     timestamp = peewee.DateTimeField(default=datetime.datetime.utcnow)
