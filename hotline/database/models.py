@@ -18,7 +18,6 @@ stuff into the higher-level interface."""
 import datetime
 import enum
 
-import hotline.chatroom
 import peewee
 
 db = peewee.Proxy()
@@ -41,16 +40,9 @@ class SerializableField(peewee.TextField):
         return self._cls.deserialize(value)
 
 
-# class NumberPool(enum.IntEnum):
-#     EVENT = 1
-#     SMS_RELAY = 2
-
-
 class Number(BaseModel):
     number = peewee.TextField()
     country = peewee.CharField(default="US")
-    # TODO NZ: remove this from the code
-    # pool = peewee.IntegerField(default=NumberPool.EVENT)
     features = peewee.TextField(index=False)
 
 
