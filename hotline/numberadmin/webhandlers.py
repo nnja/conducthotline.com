@@ -40,7 +40,7 @@ def list():
     )
 
     return flask.render_template(
-        "numberadmin/list.html", numbers=number
+        "numberadmin/list.html", numbers=numbers
     )
 
 

@@ -17,7 +17,7 @@ import logging
 import flask
 import hotline.database.ext
 from hotline import csrf, injector
-from hotline.telephony import lowlevel, smschat, verification, voice
+from hotline.telephony import lowlevel, verification, voice
 
 blueprint = flask.Blueprint("telephony", __name__)
 hotline.database.ext.init_app(blueprint)
