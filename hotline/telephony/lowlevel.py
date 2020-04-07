@@ -15,14 +15,13 @@
 """Handles low-level telephony-related actions, such as renting numbers and
 sending messages."""
 
+import logging
 import time
 
 import nexmo
 import phonenumbers
 from google.api_core import retry
 from hotline import injector
-
-import logging
 
 
 def normalize_number(value: str, country: str = "US") -> str:
@@ -62,6 +61,8 @@ def _make_client(api_key, api_secret, private_key_location, application_id):
     )
 
 
+# TODO NZ can sms callback URL be empty?
+# or, am I going to need this later for phone number verification?
 @injector.needs("nexmo.client")
 def setup_number(
     number: str, country: str, sms_callback_url: str, client: nexmo.Client
@@ -70,7 +71,7 @@ def setup_number(
         {
             "msisdn": number,
             "country": country,
-            "moHttpUrl": sms_callback_url,
+            # "moHttpUrl": sms_callback_url,
             "voiceCallbackType": "app",
             "voiceCallbackValue": client.application_id,
         }
@@ -138,7 +139,9 @@ def _send_sms_retry_predicate(error):
     return False
 
 
-@retry.Retry(predicate=_send_sms_retry_predicate, initial=1.0, maximum=1.0, deadline=30.0)
+@retry.Retry(
+    predicate=_send_sms_retry_predicate, initial=1.0, maximum=1.0, deadline=30.0
+)
 @injector.needs("nexmo.client")
 def send_sms(sender: str, to: str, message: str, client: nexmo.Client) -> dict:
     """Sends an SMS.

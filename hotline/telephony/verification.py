@@ -32,7 +32,10 @@ def _get_sender_for_member(member, virtual_number: str):
 def start_member_verification(member):
     sender = _get_sender_for_member(member)
 
-    message = f"You've been added as a member of the {member.event.name} event on conducthotline.com. Reply with YES or OK to confirm."
+    message = (
+        f"You've been added as a member of the {member.event.name} event on conducthotline.com."
+        " Reply with YES or OK to confirm."
+    )
 
     lowlevel.send_sms(sender, member.number, message)
 
