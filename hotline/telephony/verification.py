@@ -40,7 +40,7 @@ def start_member_verification(member):
     lowlevel.send_sms(sender, member.number, message)
 
 
-def maybe_handle_verification(member_number: str, message: str, manual: bool = False):
+def maybe_handle_verification(member_number: str, message: str):
     """Checks if the message is a verification message for the given number."""
     pending_member_record = db.find_pending_member_by_number(member_number)
 
