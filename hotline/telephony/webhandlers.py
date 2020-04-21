@@ -28,7 +28,8 @@ hotline.database.ext.init_app(blueprint)
 def inbound_sms():
     message = flask.request.get_json()
 
-    logging.info(f"Handling message from {message['msisdn']} to {message['to']}")
+    from_number_last_four = message['msisdn'][-4:]
+    logging.info(f"Handling message from {from_number_last_four} to {message['to']}")
 
     user_number = lowlevel.normalize_e164_number(message["msisdn"])
     relay_number = lowlevel.normalize_e164_number(message["to"])
