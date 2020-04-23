@@ -93,9 +93,11 @@ def handle_inbound_call(
             }
         )
 
+    # TODO NZ: log name instead of number.
+    # Last four digits of number is {reporter_number[-4:]}
     audit_log.log(
         audit_log.Kind.VOICE_CONVERSATION_STARTED,
-        description=f"A new voice conversation was started. UUID is {conversation_uuid[-12:]}. Last four digits of number is {reporter_number[-4:]}",
+        description=f"A new voice conversation was started. UUID is {conversation_uuid[-12:]}.",
         event=event,
         reporter_number=reporter_number,
     )
