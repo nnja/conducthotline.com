@@ -22,8 +22,6 @@ models = [
     db.Event,
     db.EventMember,
     db.EventOrganizer,
-    db.SmsChat,
-    db.SmsChatConnection,
     db.AuditLog,
     db.BlockList,
 ]

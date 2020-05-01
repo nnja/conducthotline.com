@@ -32,12 +32,15 @@ def _get_sender_for_member(member, virtual_number: str):
 def start_member_verification(member):
     sender = _get_sender_for_member(member)
 
-    message = f"You've been added as a member of the {member.event.name} event on conducthotline.com. Reply with YES or OK to confirm."
+    message = (
+        f"You've been added as a member of the {member.event.name} event on conducthotline.com."
+        " Reply with YES or OK to confirm."
+    )
 
     lowlevel.send_sms(sender, member.number, message)
 
 
-def maybe_handle_verification(member_number: str, message: str, manual: bool = False):
+def maybe_handle_verification(member_number: str, message: str):
     """Checks if the message is a verification message for the given number."""
     pending_member_record = db.find_pending_member_by_number(member_number)
 

@@ -16,20 +16,8 @@ from unittest import mock
 
 import nexmo
 import pytest
-from hotline.database import create_tables, highlevel
-from hotline.database import models as db
 from hotline.telephony import voice
-
-
-@pytest.fixture
-def database(tmpdir):
-    db_file = tmpdir.join("database.sqlite")
-    highlevel.initialize_db(database=f"sqlite:///{db_file}")
-
-    create_tables.create_tables()
-
-    with db.db:
-        yield db
+from tests.telephony import helpers
 
 
 def test_handle_inbound_call_no_event(database):
@@ -48,31 +36,13 @@ def test_handle_inbound_call_no_event(database):
     assert "No event was found" in ncco[0]["text"]
 
 
-def create_event():
-    number = db.Number()
-    number.number = "5678"
-    number.country = "US"
-    number.features = ""
-    number.save()
-
-    event = db.Event()
-    event.name = "Test event"
-    event.slug = "test"
-    event.owner_user_id = "abc123"
-    event.primary_number = number.number
-    event.primary_number_id = number
-    event.save()
-
-    return event
-
-
 def test_handle_inbound_call_blocked(database):
-    event = create_event()
-    add_unverfied_members(event)
+    event = helpers.create_event()
+    helpers.add_unverfied_members(event)
 
     nexmo_client = mock.create_autospec(nexmo.Client)
 
-    db.BlockList.create(event=event, number="1234", blocked_by="test")
+    helpers.create_block_list(event, number="1234", blocked_by="test")
 
     ncco = voice.handle_inbound_call(
         reporter_number="1234",
@@ -87,18 +57,9 @@ def test_handle_inbound_call_blocked(database):
     assert "unavailable" in ncco[0]["text"]
 
 
-def add_unverfied_members(event):
-    member = db.EventMember()
-    member.name = "Unverified Judy"
-    member.number = "303"
-    member.event = event
-    member.verified = False
-    member.save()
-
-
 def test_handle_inbound_call_no_members(database):
-    event = create_event()
-    add_unverfied_members(event)
+    event = helpers.create_event()
+    helpers.add_unverfied_members(event)
 
     nexmo_client = mock.create_autospec(nexmo.Client)
 
@@ -115,25 +76,9 @@ def test_handle_inbound_call_no_members(database):
     assert "no verified members" in ncco[0]["text"]
 
 
-def add_members(event):
-    member = db.EventMember()
-    member.name = "Bob"
-    member.number = "101"
-    member.event = event
-    member.verified = True
-    member.save()
-
-    member = db.EventMember()
-    member.name = "Alice"
-    member.number = "202"
-    member.event = event
-    member.verified = True
-    member.save()
-
-
 def test_handle_inbound_call(database):
-    event = create_event()
-    add_members(event)
+    event = helpers.create_event()
+    helpers.add_members(event)
 
     nexmo_client = mock.create_autospec(nexmo.Client)
 
@@ -168,8 +113,8 @@ def test_handle_inbound_call(database):
 
 
 def test_handle_inbound_call_custom_greeting(database):
-    event = create_event()
-    add_members(event)
+    event = helpers.create_event()
+    helpers.add_members(event)
 
     nexmo_client = mock.create_autospec(nexmo.Client)
 
@@ -207,8 +152,8 @@ def test_handle_member_answer_no_event(database):
 
 
 def test_handle_member_answer(database):
-    event = create_event()
-    add_members(event)
+    event = helpers.create_event()
+    helpers.add_members(event)
 
     nexmo_client = mock.create_autospec(nexmo.Client)
 

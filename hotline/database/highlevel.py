@@ -16,7 +16,6 @@
 
 from typing import Iterable, List, Optional
 
-import hotline.chatroom
 import peewee
 import playhouse.db_url
 from hotline import audit_log, injector
@@ -172,7 +171,6 @@ def find_unused_event_numbers(country: str) -> List[models.Number]:
             on=(models.Event.primary_number_id == models.Number.id),
         )
         .where(models.Event.primary_number_id.is_null())
-        .where(models.Number.pool == models.NumberPool.EVENT)
         .where(models.Number.country == country)
         .limit(5)
     )
@@ -190,125 +188,6 @@ def acquire_number(event: models.Event) -> str:
         event.save()
 
         return event.primary_number
-
-
-def get_unused_relay_numbers_for_event(
-    event: models.Event, organizer_numbers: List[str] = [], limit: int = 1
-) -> List[str]:
-    # TODO: Should probably be a join, but its unlikely this list will
-    # get big enough in the near future to be an issue.
-
-    # Find all relays currently being used by this event.
-    used_relay_numbers_query = models.SmsChat.select(models.SmsChat.relay_number).where(
-        models.SmsChat.event == event
-    )
-
-    used_relay_numbers = [row.relay_number for row in used_relay_numbers_query]
-
-    # Further refine - don't include relays if they're already assigned to the same organizer
-    # in another event.
-    # Aside: this query might actually be enough to determine all used relays.
-    event_organizers_used_relays_query = models.SmsChatConnection.select(
-        models.SmsChatConnection.relay_number
-    ).where(models.SmsChatConnection.user_number.in_(organizer_numbers))
-
-    event_organizers_used_relays = [
-        row.relay_number for row in event_organizers_used_relays_query
-    ]
-
-    # Combine those together into a set.
-    used_relay_numbers = list(set(used_relay_numbers + event_organizers_used_relays))
-
-    # Now find numbers in the SMS RELAY pool that aren't in that set.
-    unused_number_query = (
-        models.Number.select(models.Number.number)
-        .where(models.Number.pool == models.NumberPool.SMS_RELAY)
-        .where(models.Number.country == event.country)
-        .where(models.Number.number.not_in(used_relay_numbers))
-        .limit(limit)
-    )
-
-    numbers = [row.number for row in unused_number_query]
-
-    return numbers
-
-
-def get_remaining_relays_for_event(event: models.Event) -> int:
-    return len(get_unused_relay_numbers_for_event(event, limit=1000))
-
-
-def find_unused_relay_number(
-    event: models.Event, organizer_numbers: List[str]
-) -> Optional[str]:
-    """Find a relay number that isn't currently used by the event"""
-    numbers = get_unused_relay_numbers_for_event(
-        event, organizer_numbers=organizer_numbers
-    )
-    if not numbers:
-        return None
-    else:
-        return numbers[0]
-
-
-def save_room(
-    room: hotline.chatroom.Chatroom, relay_number: str, event: models.Event
-) -> None:
-    with models.db.atomic():
-        smschat = models.SmsChat.create(
-            event=event, room=room, relay_number=relay_number
-        )
-
-        # Create connections so that the sms chat can be looked up by user number
-        # and relay number.
-        for connection in room.users:
-            models.SmsChatConnection.create(
-                user_number=connection.number,
-                relay_number=connection.relay,
-                user_name=connection.name,
-                smschat=smschat,
-            )
-
-
-def find_smschat_by_user_and_relay_numbers(
-    user_number: str, relay_number: str
-) -> Optional[models.SmsChat]:
-    try:
-        connection = models.SmsChatConnection.get(
-            models.SmsChatConnection.user_number == user_number,
-            models.SmsChatConnection.relay_number == relay_number,
-        )
-        return connection.smschat
-
-    except peewee.DoesNotExist:
-        return None
-
-
-def remove_event_chat(event: models.Event, chat_id: str, user: dict):
-    item = models.SmsChat.get(
-        models.SmsChat.event == event, models.SmsChat.id == int(chat_id)
-    )
-
-    # Delete all connections
-    models.SmsChatConnection.delete().where(
-        models.SmsChatConnection.smschat == item
-    ).execute()
-
-    item.delete_instance()
-
-    audit_log.log(
-        kind=audit_log.Kind.CHAT_DELETED,
-        description=f"{user['name']} deleted the chat with the relay number {item.relay_number}.",
-        event=event,
-        user=user["user_id"],
-    )
-
-
-def get_chats_for_event(event: models.Event):
-    return (
-        models.SmsChat.select()
-        .where(models.SmsChat.event == event)
-        .order_by(-models.SmsChat.timestamp)
-    )
 
 
 def get_logs_for_event(event: models.Event):

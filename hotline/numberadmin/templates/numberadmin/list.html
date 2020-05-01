@@ -27,7 +27,7 @@
         {% endif %}
       </td>
       <td>
-        {{NumberPool(number.pool).name.replace("_", " ")|title}}
+        {# {{NumberPool(number.pool).name.replace("_", " ")|title}} #}
       </td>
       <td>
         {{number.features}}
@@ -49,10 +49,11 @@
     </div>
     <div class="field is-grouped">
       <div class="control">
-        <button type="submit" name="pool" value="{{NumberPool.EVENT.value}}" class="button is-primary">Rent new event number</button>
+        <!-- TODO NZ: Revisit, now pools can only be of type EVENT -->
+        {# <button type="submit" name="pool" value="{{NumberPool.EVENT.value}}" class="button is-primary">Rent new event number</button> #}
       </div>
       <div class="control">
-        <button type="submit" name="pool" value="{{NumberPool.SMS_RELAY.value}}" class="button is-link">Rent new SMS relay number</button>
+        {# <button type="submit" name="pool" value="{{NumberPool.SMS_RELAY.value}}" class="button is-link">Rent new SMS relay number</button> #}
       </div>
     </div>
   </form>

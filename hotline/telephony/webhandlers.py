@@ -17,7 +17,7 @@ import logging
 import flask
 import hotline.database.ext
 from hotline import csrf, injector
-from hotline.telephony import lowlevel, smschat, verification, voice
+from hotline.telephony import lowlevel, verification, voice
 
 blueprint = flask.Blueprint("telephony", __name__)
 hotline.database.ext.init_app(blueprint)
@@ -35,14 +35,7 @@ def inbound_sms():
     message_text = message["text"]
 
     # Maybe handle verification, if this is a response to a verification message.
-    if verification.maybe_handle_verification(user_number, message_text):
-        return "", 204
-
-    # It's not verification, so hand it off to SMS chat
-    try:
-        smschat.handle_message(user_number, relay_number, message_text)
-    except smschat.SmsChatError as err:
-        smschat.handle_sms_chat_error(err, user_number, relay_number)
+    verification.maybe_handle_verification(user_number, message_text)
 
     return "", 204
 
