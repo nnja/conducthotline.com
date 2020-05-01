@@ -19,6 +19,8 @@ import hotline.database.ext
 from hotline import csrf, injector
 from hotline.telephony import lowlevel, verification, voice
 
+logger = logging.getLogger(__name__)
+
 blueprint = flask.Blueprint("telephony", __name__)
 hotline.database.ext.init_app(blueprint)
 
@@ -28,7 +30,9 @@ hotline.database.ext.init_app(blueprint)
 def inbound_sms():
     message = flask.request.get_json()
 
-    logging.info(f"Handling message from {message['msisdn']} to {message['to']}")
+    # TODO NZ: log member name here instead of phone number
+    # from_number_last_four = message['msisdn'][-4:]
+    logger.info(f"Handling a message to {message['to']}")
 
     user_number = lowlevel.normalize_e164_number(message["msisdn"])
     relay_number = lowlevel.normalize_e164_number(message["to"])

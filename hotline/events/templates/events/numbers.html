@@ -56,7 +56,6 @@
       <thead>
         <tr>
           <th>Name</th>
-          <th>Number</th>
           <th>Verified</th>
           <th></th>
         </tr>
@@ -65,7 +64,6 @@
         {% for member in members %}
         <tr>
           <td>{{member.name|e}}</td>
-          <td>{{member.number|e|phone}}</td>
           <th>{{member.verified}}</th>
           <th class="has-text-right">
             {% if g.user.super_admin and not member.verified %}

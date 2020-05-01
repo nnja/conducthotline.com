@@ -24,6 +24,9 @@ from google.api_core import retry
 from hotline import injector
 
 
+logger = logging.getLogger(__name__)
+
+
 def normalize_number(value: str, country: str = "US") -> str:
     number = phonenumbers.parse(value, country)
     return phonenumbers.format_number(number, phonenumbers.PhoneNumberFormat.E164)
@@ -131,7 +134,7 @@ def get_number_info(number: str, client: nexmo.Client) -> dict:
 
 
 def _send_sms_retry_predicate(error):
-    logging.exception("Error during SMS send")
+    logger.exception("Error during SMS send")
     if isinstance(error, nexmo.ClientError) and "Throughput Rate Exceeded" in str(
         error
     ):
@@ -154,7 +157,8 @@ def send_sms(sender: str, to: str, message: str, client: nexmo.Client) -> dict:
     # Nexmo is apparently picky about + being in the sender.
     sender = sender.strip("+")
 
-    logging.info(f"Sending from {sender} to {to} message length {len(message)}")
+    # TODO NZ: Log caller name instead of {to} number.
+    logger.info(f"Sending from {sender} message length {len(message)}")
 
     resp = client.send_message({"from": sender, "to": to, "text": message})
 
