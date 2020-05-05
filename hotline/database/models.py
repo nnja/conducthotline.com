@@ -95,7 +95,7 @@ EventMember.add_index(EventMember.number, EventMember.verified)
 
 
 # TODO NZ: Refactor, change this name
-class EventOrganizer(BaseModel):
+class HotlineAdmin(BaseModel):
     """Organizers are able to edit event details, but aren't necessarily part
     of the hotline."""
 
@@ -105,7 +105,7 @@ class EventOrganizer(BaseModel):
     user_email = peewee.TextField()
 
 
-EventOrganizer.add_index(EventOrganizer.user_id)
+HotlineAdmin.add_index(HotlineAdmin.user_id)
 
 
 # TODO NZ: Keep the audit log, but remove from the view

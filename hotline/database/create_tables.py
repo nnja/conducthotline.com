@@ -21,7 +21,7 @@ models = [
     db.Number,
     db.Event,
     db.EventMember,
-    db.EventOrganizer,
+    db.HotlineAdmin,
     db.AuditLog,
     db.BlockList,
 ]

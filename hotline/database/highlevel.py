@@ -30,8 +30,8 @@ def initialize_db(database):
 def list_events_for_user(user_id: str) -> Iterable[models.Event]:
     query = (
         models.Event.select(models.Event.name, models.Event.slug)
-        .join(models.EventOrganizer)
-        .where(models.EventOrganizer.user_id == user_id)
+        .join(models.HotlineAdmin)
+        .where(models.HotlineAdmin.user_id == user_id)
         .order_by(models.Event.name)
     )
 
@@ -41,9 +41,9 @@ def list_events_for_user(user_id: str) -> Iterable[models.Event]:
 def check_if_user_is_organizer(event_slug, user_id) -> Optional[models.Event]:
     query = (
         models.Event.select()
-        .join(models.EventOrganizer)
+        .join(models.HotlineAdmin)
         .where(models.Event.slug == event_slug)
-        .where(models.EventOrganizer.user_id == user_id)
+        .where(models.HotlineAdmin.user_id == user_id)
         .order_by(models.Event.name)
     )
     try:
@@ -77,7 +77,7 @@ def get_event_organizers(event: models.Event):
 
 
 def add_event_organizer(event: models.Event, user: dict) -> None:
-    organizer_entry = models.EventOrganizer()
+    organizer_entry = models.HotlineAdmin()
     organizer_entry.event = event
     organizer_entry.user_id = user["user_id"]
     organizer_entry.user_name = user["name"]
@@ -86,7 +86,7 @@ def add_event_organizer(event: models.Event, user: dict) -> None:
 
 
 def add_pending_event_organizer(event: models.Event, user_email: str) -> None:
-    organizer_entry = models.EventOrganizer()
+    organizer_entry = models.HotlineAdmin()
     organizer_entry.event = event
     organizer_entry.user_email = user_email
     organizer_entry.save()
@@ -111,13 +111,13 @@ def accept_organizer_invitation(
 
 
 def remove_event_organizer(organizer_id: str) -> None:
-    models.EventOrganizer.get(
-        models.EventOrganizer.id == int(organizer_id)
+    models.HotlineAdmin.get(
+        models.HotlineAdmin.id == int(organizer_id)
     ).delete_instance()
 
 
 def get_event_organizer(organizer_id: str) -> models.EventOrganizer:
-    return models.EventOrganizer.get_by_id(organizer_id)
+    return models.HotlineAdmin.get_by_id(organizer_id)
 
 
 def get_event_members(event) -> Iterable[models.EventMember]:
