@@ -50,7 +50,7 @@ Number.add_index(Number.number)
 
 
 # TODO NZ: Rename this. Group?
-class Event(BaseModel):
+class Hotline(BaseModel):
     # Always required stuff.
     name = peewee.TextField()
     slug = peewee.CharField(unique=True)
@@ -75,8 +75,8 @@ class Event(BaseModel):
     voice_greeting = peewee.TextField(null=True, index=False)
 
 
-Event.add_index(Event.slug)
-Event.add_index(Event.primary_number)
+Hotline.add_index(Hotline.slug)
+Hotline.add_index(Hotline.primary_number)
 
 
 # TODO NZ: Refactor, change this name
@@ -84,7 +84,7 @@ class HotlineMember(BaseModel):
     """Members are part of the hotline, but not necessarily able to edit
     hotline details."""
 
-    event = peewee.ForeignKeyField(Event, backref="members")
+    event = peewee.ForeignKeyField(Hotline, backref="members")
     name = peewee.TextField()
     number = peewee.TextField()
     verified = peewee.BooleanField()
@@ -99,7 +99,7 @@ class HotlineAdmin(BaseModel):
     """Organizers are able to edit event details, but aren't necessarily part
     of the hotline."""
 
-    event = peewee.ForeignKeyField(Event, backref="organizers")
+    event = peewee.ForeignKeyField(Hotline, backref="organizers")
     user_id = peewee.CharField(null=True)
     user_name = peewee.TextField(null=True)
     user_email = peewee.TextField()
@@ -113,7 +113,7 @@ class AuditLog(BaseModel):
     timestamp = peewee.DateTimeField(default=datetime.datetime.utcnow)
     kind = peewee.IntegerField()
     description = peewee.TextField(null=True)
-    event = peewee.ForeignKeyField(Event, backref="auditlogs", null=True)
+    event = peewee.ForeignKeyField(Hotline, backref="auditlogs", null=True)
     user = peewee.CharField(null=True)
     metadata = peewee.TextField(null=True)
     reporter_number = peewee.TextField(null=True, index=False)
@@ -124,6 +124,6 @@ AuditLog.add_index(AuditLog.event, AuditLog.timestamp)
 
 class BlockList(BaseModel):
     timestamp = peewee.DateTimeField(default=datetime.datetime.utcnow)
-    event = peewee.ForeignKeyField(Event, backref="blocklist")
+    event = peewee.ForeignKeyField(Hotline, backref="blocklist")
     number = peewee.TextField()
     blocked_by = peewee.TextField(null=True)

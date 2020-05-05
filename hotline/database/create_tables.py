@@ -19,7 +19,7 @@ from hotline.database import models as db
 
 models = [
     db.Number,
-    db.Event,
+    db.Hotline,
     db.HotlineMember,
     db.HotlineAdmin,
     db.AuditLog,

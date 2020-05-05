@@ -27,24 +27,24 @@ def initialize_db(database):
     models.db.initialize(playhouse.db_url.connect(database))
 
 
-def list_events_for_user(user_id: str) -> Iterable[models.Event]:
+def list_events_for_user(user_id: str) -> Iterable[models.Hotline]:
     query = (
-        models.Event.select(models.Event.name, models.Event.slug)
+        models.Hotline.select(models.Hotline.name, models.Hotline.slug)
         .join(models.HotlineAdmin)
         .where(models.HotlineAdmin.user_id == user_id)
-        .order_by(models.Event.name)
+        .order_by(models.Hotline.name)
     )
 
     yield from query
 
 
-def check_if_user_is_organizer(event_slug, user_id) -> Optional[models.Event]:
+def check_if_user_is_organizer(event_slug, user_id) -> Optional[models.Hotline]:
     query = (
-        models.Event.select()
+        models.Hotline.select()
         .join(models.HotlineAdmin)
-        .where(models.Event.slug == event_slug)
+        .where(models.Hotline.slug == event_slug)
         .where(models.HotlineAdmin.user_id == user_id)
-        .order_by(models.Event.name)
+        .order_by(models.Hotline.name)
     )
     try:
         return query.get()
@@ -53,20 +53,20 @@ def check_if_user_is_organizer(event_slug, user_id) -> Optional[models.Event]:
 
 
 def new_event() -> models.Event:
-    event = models.Event()
+    event = models.Hotline()
     return event
 
 
-def get_event_by_slug(event_slug: str) -> Optional[models.Event]:
+def get_event_by_slug(event_slug: str) -> Optional[models.Hotline]:
     try:
-        return models.Event.get(models.Event.slug == event_slug)
+        return models.Hotline.get(models.Hotline.slug == event_slug)
     except peewee.DoesNotExist:
         return None
 
 
-def get_event_by_number(number: str) -> Optional[models.Event]:
+def get_event_by_number(number: str) -> Optional[models.Hotline]:
     try:
-        return models.Event.get(models.Event.primary_number == number)
+        return models.Hotline.get(models.Hotline.primary_number == number)
     except peewee.DoesNotExist:
         return None
 
@@ -94,7 +94,7 @@ def add_pending_event_organizer(event: models.Event, user_email: str) -> None:
 
 def accept_organizer_invitation(
     invitation_id: str, user: dict
-) -> Optional[models.Event]:
+) -> Optional[models.Hotline]:
     try:
         organizer_entry = get_event_organizer(invitation_id)
     except peewee.DoesNotExist:
@@ -166,11 +166,11 @@ def find_unused_event_numbers(country: str) -> List[models.Number]:
     return list(
         models.Number.select()
         .join(
-            models.Event,
+            models.Hotline,
             peewee.JOIN.LEFT_OUTER,
-            on=(models.Event.primary_number_id == models.Number.id),
+            on=(models.Hotline.primary_number_id == models.Number.id),
         )
-        .where(models.Event.primary_number_id.is_null())
+        .where(models.Hotline.primary_number_id.is_null())
         .where(models.Number.country == country)
         .limit(5)
     )

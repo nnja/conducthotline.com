@@ -31,12 +31,12 @@ def list():
         models.Number.number,
         models.Number.country,
         models.Number.features,
-        models.Event.name,
-        models.Event.slug,
+        models.Hotline.name,
+        models.Hotline.slug,
     ).join(
-        models.Event,
+        models.Hotline,
         peewee.JOIN.LEFT_OUTER,
-        on=(models.Event.primary_number_id == models.Number.id),
+        on=(models.Hotline.primary_number_id == models.Number.id),
     )
 
     return flask.render_template(
@@ -51,8 +51,8 @@ def details(number):
 
     try:
         event = (
-            models.Event.select()
-            .where(models.Event.primary_number_id == number_entry)
+            models.Hotline.select()
+            .where(models.Hotline.primary_number_id == number_entry)
             .get()
         )
     except peewee.DoesNotExist:

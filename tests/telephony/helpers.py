@@ -8,7 +8,7 @@ def create_event(create_primary_number=True):
     number.features = ""
     number.save()
 
-    event = db.Event()
+    event = db.Hotline()
     event.name = "Test event"
     event.slug = "test"
     event.owner_user_id = "abc123"
