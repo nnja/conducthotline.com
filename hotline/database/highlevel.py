@@ -72,13 +72,13 @@ def get_event_by_number(number: str) -> Optional[models.Hotline]:
 
 
 def get_event_organizers(event: models.Hotline):
-    query = event.organizers
+    query = event.admins
     yield from query
 
 
 def add_event_organizer(event: models.Hotline, user: dict) -> None:
     organizer_entry = models.HotlineAdmin()
-    organizer_entry.event = event
+    organizer_entry.hotline = event
     organizer_entry.user_id = user["user_id"]
     organizer_entry.user_name = user["name"]
     organizer_entry.user_email = user["email"]
@@ -87,7 +87,7 @@ def add_event_organizer(event: models.Hotline, user: dict) -> None:
 
 def add_pending_event_organizer(event: models.Hotline, user_email: str) -> None:
     organizer_entry = models.HotlineAdmin()
-    organizer_entry.event = event
+    organizer_entry.hotline = event
     organizer_entry.user_email = user_email
     organizer_entry.save()
 
@@ -107,7 +107,7 @@ def accept_organizer_invitation(
     organizer_entry.user_name = user["name"]
     organizer_entry.save()
 
-    return organizer_entry.event
+    return organizer_entry.hotline
 
 
 def remove_event_organizer(organizer_id: str) -> None:
