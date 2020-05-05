@@ -74,8 +74,8 @@ def add():
 
         audit_log.log(
             audit_log.Kind.EVENT_MODIFIED,
-            description=f"{flask.g.user['name']} created the event.",
-            event=event,
+            description=f"{flask.g.user['name']} created the hotline.",
+            hotline=event,
             user=user["user_id"],
         )
 
@@ -96,7 +96,7 @@ def details(event, user):
         audit_log.log(
             audit_log.Kind.EVENT_MODIFIED,
             description=f"{flask.g.user['name']} updated the event details.",
-            event=event,
+            hotline=event,
             user=user["user_id"],
         )
 
@@ -121,7 +121,7 @@ def numbers(event, user):
         audit_log.log(
             audit_log.Kind.MEMBER_ADDED,
             description=f"{flask.g.user['name']} added {member.name}.",
-            event=event,
+            hotline=event,
             user=user["user_id"],
         )
 
@@ -147,7 +147,7 @@ def remove_member(member_id, event, user):
     audit_log.log(
         audit_log.Kind.MEMBER_REMOVED,
         description=f"{flask.g.user['name']} removed {member.name}.",
-        event=event,
+        hotline=event,
         user=user["user_id"],
     )
 
@@ -178,7 +178,7 @@ def organizers(event, user):
         audit_log.log(
             audit_log.Kind.ORGANIZER_ADDED,
             description=f"{flask.g.user['name']} invited {form.email.data}.",
-            event=event,
+            hotline=event,
             user=user["user_id"],
         )
 
@@ -201,7 +201,7 @@ def remove_organizer(organizer_id, event, user):
     audit_log.log(
         audit_log.Kind.ORGANIZER_REMOVED,
         description=f"{flask.g.user['name']} removed {organizer.user_email}.",
-        event=event,
+        hotline=event,
         user=user["user_id"],
     )
 
@@ -230,7 +230,7 @@ def release(event, user):
     audit_log.log(
         audit_log.Kind.NUMBER_RELEASED,
         description=f"{flask.g.user['name']} released the number {previous_number}",
-        event=event,
+        hotline=event,
         user=user["user_id"],
     )
 
@@ -245,7 +245,7 @@ def acquire(event, user):
     audit_log.log(
         audit_log.Kind.NUMBER_ACQUIRED,
         description=f"{flask.g.user['name']} acquired the number {new_number}",
-        event=event,
+        hotline=event,
         user=user["user_id"],
     )
 

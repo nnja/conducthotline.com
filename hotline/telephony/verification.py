@@ -22,8 +22,8 @@ from hotline.telephony import lowlevel
 @injector.needs("secrets.virtual_number")
 def _get_sender_for_member(member, virtual_number: str):
     # Try to send from the event number, if it has one.
-    if member.event.primary_number:
-        return member.event.primary_number
+    if member.hotline.primary_number:
+        return member.hotline.primary_number
 
     # If not, send from the hotline's number.
     return virtual_number
@@ -33,7 +33,7 @@ def start_member_verification(member):
     sender = _get_sender_for_member(member)
 
     message = (
-        f"You've been added as a member of the {member.event.name} event on conducthotline.com."
+        f"You've been added as a member of the {member.hotline.name} event on conducthotline.com."
         " Reply with YES or OK to confirm."
     )
 
@@ -58,7 +58,7 @@ def maybe_handle_verification(member_number: str, message: str):
     audit_log.log(
         audit_log.Kind.MEMBER_NUMBER_VERIFIED,
         description=f"{pending_member_record.name} verified their number.",
-        event=pending_member_record.event,
+        hotline=pending_member_record.hotline,
     )
 
     sender = _get_sender_for_member(pending_member_record)
@@ -75,7 +75,7 @@ def manually_verify(member):
     audit_log.log(
         audit_log.Kind.MEMBER_NUMBER_VERIFIED,
         description=f"An admin manually verified {member.name}'s number.",
-        event=member.event,
+        hotline=member.hotline,
     )
 
     return True

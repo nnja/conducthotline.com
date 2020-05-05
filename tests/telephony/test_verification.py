@@ -24,7 +24,7 @@ def test_start_member_verification(sleep, database):
     verification.start_member_verification(member)
 
     expected_msg = (
-        f"You've been added as a member of the {member.event.name} event on conducthotline.com."
+        f"You've been added as a member of the {member.hotline.name} event on conducthotline.com."
         " Reply with YES or OK to confirm."
     )
 
@@ -51,7 +51,7 @@ def test_start_member_verification_no_primary_event_number(sleep, database):
     verification.start_member_verification(member)
 
     expected_msg = (
-        f"You've been added as a member of the {member.event.name} event on conducthotline.com."
+        f"You've been added as a member of the {member.hotline.name} event on conducthotline.com."
         " Reply with YES or OK to confirm."
     )
 

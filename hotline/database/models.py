@@ -84,22 +84,22 @@ class HotlineMember(BaseModel):
     """Members are part of the hotline, but not necessarily able to edit
     hotline details."""
 
-    event = peewee.ForeignKeyField(Hotline, backref="members")
+    hotline = peewee.ForeignKeyField(Hotline, backref="members")
     name = peewee.TextField()
     number = peewee.TextField()
     verified = peewee.BooleanField()
 
 
-HotlineMember.add_index(HotlineMember.event, HotlineMember.verified)
+HotlineMember.add_index(HotlineMember.hotline, HotlineMember.verified)
 HotlineMember.add_index(HotlineMember.number, HotlineMember.verified)
 
 
 # TODO NZ: Refactor, change this name
 class HotlineAdmin(BaseModel):
-    """Organizers are able to edit event details, but aren't necessarily part
+    """Organizers are able to edit hotline details, but aren't necessarily part
     of the hotline."""
 
-    event = peewee.ForeignKeyField(Hotline, backref="organizers")
+    hotline = peewee.ForeignKeyField(Hotline, backref="admins")
     user_id = peewee.CharField(null=True)
     user_name = peewee.TextField(null=True)
     user_email = peewee.TextField()
@@ -113,17 +113,17 @@ class AuditLog(BaseModel):
     timestamp = peewee.DateTimeField(default=datetime.datetime.utcnow)
     kind = peewee.IntegerField()
     description = peewee.TextField(null=True)
-    event = peewee.ForeignKeyField(Hotline, backref="auditlogs", null=True)
+    hotline = peewee.ForeignKeyField(Hotline, backref="auditlogs", null=True)
     user = peewee.CharField(null=True)
     metadata = peewee.TextField(null=True)
     reporter_number = peewee.TextField(null=True, index=False)
 
 
-AuditLog.add_index(AuditLog.event, AuditLog.timestamp)
+AuditLog.add_index(AuditLog.hotline, AuditLog.timestamp)
 
 
 class BlockList(BaseModel):
     timestamp = peewee.DateTimeField(default=datetime.datetime.utcnow)
-    event = peewee.ForeignKeyField(Hotline, backref="blocklist")
+    hotline = peewee.ForeignKeyField(Hotline, backref="blocklist")
     number = peewee.TextField()
     blocked_by = peewee.TextField(null=True)

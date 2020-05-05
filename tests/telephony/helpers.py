@@ -24,24 +24,24 @@ def create_event(create_primary_number=True):
 
 # TODO NZ: rename method to member (single)
 # TODO NZ: fix verified spelled wrong
-def add_unverfied_members(event):
+def add_unverfied_members(hotline):
     member = db.HotlineMember()
     member.name = "Unverified Judy"
     member.number = "303"
-    member.event = event
+    member.hotline = hotline
     member.verified = False
     member.save()
 
     return member
 
 
-def add_members(event):
+def add_members(hotline):
     members = []
 
     member = db.HotlineMember()
     member.name = "Bob"
     member.number = "101"
-    member.event = event
+    member.hotline = hotline
     member.verified = True
     member.save()
     members.append(member)
@@ -49,7 +49,7 @@ def add_members(event):
     member = db.HotlineMember()
     member.name = "Alice"
     member.number = "202"
-    member.event = event
+    member.hotline = hotline
     member.verified = True
     member.save()
     members.append(member)
@@ -58,4 +58,4 @@ def add_members(event):
 
 
 def create_block_list(event, number, blocked_by):
-    db.BlockList.create(event=event, number=number, blocked_by=blocked_by)
+    db.BlockList.create(hotline=event, number=number, blocked_by=blocked_by)

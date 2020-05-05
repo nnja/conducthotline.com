@@ -40,14 +40,14 @@ class Kind(enum.IntEnum):
 def log(
     kind: Kind,
     description: str,
-    event: models.Event = None,
+    hotline: models.Hotline = None,
     user: str = None,
     reporter_number: str = None,
 ) -> None:
     audit_log = models.AuditLog()
     audit_log.kind = kind
     audit_log.description = description
-    audit_log.event = event
+    audit_log.hotline = hotline
     audit_log.user = user
     audit_log.reporter_number = reporter_number
     audit_log.save()

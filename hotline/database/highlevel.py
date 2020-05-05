@@ -52,7 +52,7 @@ def check_if_user_is_organizer(event_slug, user_id) -> Optional[models.Hotline]:
         return None
 
 
-def new_event() -> models.Event:
+def new_event() -> models.Hotline:
     event = models.Hotline()
     return event
 
@@ -71,12 +71,12 @@ def get_event_by_number(number: str) -> Optional[models.Hotline]:
         return None
 
 
-def get_event_organizers(event: models.Event):
+def get_event_organizers(event: models.Hotline):
     query = event.organizers
     yield from query
 
 
-def add_event_organizer(event: models.Event, user: dict) -> None:
+def add_event_organizer(event: models.Hotline, user: dict) -> None:
     organizer_entry = models.HotlineAdmin()
     organizer_entry.event = event
     organizer_entry.user_id = user["user_id"]
@@ -85,7 +85,7 @@ def add_event_organizer(event: models.Event, user: dict) -> None:
     organizer_entry.save()
 
 
-def add_pending_event_organizer(event: models.Event, user_email: str) -> None:
+def add_pending_event_organizer(event: models.Hotline, user_email: str) -> None:
     organizer_entry = models.HotlineAdmin()
     organizer_entry.event = event
     organizer_entry.user_email = user_email
@@ -116,7 +116,7 @@ def remove_event_organizer(organizer_id: str) -> None:
     ).delete_instance()
 
 
-def get_event_organizer(organizer_id: str) -> models.EventOrganizer:
+def get_event_organizer(organizer_id: str) -> models.HotlineAdmin:
     return models.HotlineAdmin.get_by_id(organizer_id)
 
 
@@ -130,9 +130,9 @@ def get_verified_event_members(event) -> Iterable[models.HotlineMember]:
     yield from query
 
 
-def new_event_member(event: models.Event) -> models.EventMember:
+def new_event_member(event: models.Hotline) -> models.HotlineMember:
     member = models.HotlineMember()
-    member.event = event
+    member.hotline = event
     member.verified = False
     return member
 
@@ -141,7 +141,7 @@ def remove_event_member(member_id: str) -> None:
     models.HotlineMember.get(models.HotlineMember.id == int(member_id)).delete_instance()
 
 
-def get_member(member_id: str) -> models.EventMember:
+def get_member(member_id: str) -> models.HotlineMember:
     return models.HotlineMember.get_by_id(member_id)
 
 
@@ -176,7 +176,7 @@ def find_unused_event_numbers(country: str) -> List[models.Number]:
     )
 
 
-def acquire_number(event: models.Event) -> str:
+def acquire_number(event: models.Hotline) -> str:
     with models.db.atomic():
         numbers = find_unused_event_numbers(event.country)
 
@@ -190,25 +190,25 @@ def acquire_number(event: models.Event) -> str:
         return event.primary_number
 
 
-def get_logs_for_event(event: models.Event):
+def get_logs_for_event(event: models.Hotline):
     return (
         models.AuditLog.select()
-        .where(models.AuditLog.event == event)
+        .where(models.AuditLog.hotline == event)
         .order_by(-models.AuditLog.timestamp)
     )
 
 
-def get_blocklist_for_event(event: models.Event):
+def get_blocklist_for_event(event: models.Hotline):
     return (
         models.BlockList.select()
-        .where(models.BlockList.event == event)
+        .where(models.BlockList.hotline == event)
         .order_by(-models.BlockList.timestamp)
     )
 
 
-def create_blocklist_item(event: models.Event, log_id: str, user: dict):
+def create_blocklist_item(event: models.Hotline, log_id: str, user: dict):
     log = models.AuditLog.get(
-        models.AuditLog.event == event, models.AuditLog.id == int(log_id)
+        models.AuditLog.hotline == event, models.AuditLog.id == int(log_id)
     )
 
     models.BlockList.create(
@@ -218,14 +218,14 @@ def create_blocklist_item(event: models.Event, log_id: str, user: dict):
     audit_log.log(
         kind=audit_log.Kind.NUMBER_BLOCKED,
         description=f"{user['name']} blocked the number ending in {log.reporter_number[-4:]}.",
-        event=event,
+        hotline=event,
         user=user["user_id"],
     )
 
 
-def remove_blocklist_item(event: models.Event, blocklist_id: str, user: dict):
+def remove_blocklist_item(event: models.Hotline, blocklist_id: str, user: dict):
     item = models.BlockList.get(
-        models.BlockList.event == event, models.BlockList.id == int(blocklist_id)
+        models.BlockList.hotline == event, models.BlockList.id == int(blocklist_id)
     )
 
     item.delete_instance()
@@ -233,15 +233,15 @@ def remove_blocklist_item(event: models.Event, blocklist_id: str, user: dict):
     audit_log.log(
         kind=audit_log.Kind.NUMBER_UNBLOCKED,
         description=f"{user['name']} unblocked the number ending in {item.number[-4:]}.",
-        event=event,
+        hotline=event,
         user=user["user_id"],
     )
 
 
-def check_if_blocked(event: models.Event, number: str):
+def check_if_blocked(event: models.Hotline, number: str):
     try:
         models.BlockList.get(
-            models.BlockList.event == event, models.BlockList.number == number
+            models.BlockList.hotline == event, models.BlockList.number == number
         )
         return True
     except peewee.DoesNotExist:

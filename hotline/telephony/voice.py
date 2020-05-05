@@ -98,7 +98,7 @@ def handle_inbound_call(
     audit_log.log(
         audit_log.Kind.VOICE_CONVERSATION_STARTED,
         description=f"A new voice conversation was started. UUID is {conversation_uuid[-12:]}.",
-        event=event,
+        hotline=event,
         reporter_number=reporter_number,
     )
 
@@ -147,7 +147,7 @@ def handle_member_answer(
         audit_log.Kind.VOICE_CONVERSATION_ANSWERED,
         description=f"{member.name} answered {origin_conversation_uuid[-12:]}.",
         user="{member.name}",
-        event=event,
+        hotline=event,
     )
 
     return ncco
