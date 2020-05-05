@@ -120,43 +120,43 @@ def get_event_organizer(organizer_id: str) -> models.EventOrganizer:
     return models.HotlineAdmin.get_by_id(organizer_id)
 
 
-def get_event_members(event) -> Iterable[models.EventMember]:
+def get_event_members(event) -> Iterable[models.HotlineMember]:
     query = event.members
     yield from query
 
 
-def get_verified_event_members(event) -> Iterable[models.EventMember]:
-    query = event.members.where(models.EventMember.verified == True)  # noqa
+def get_verified_event_members(event) -> Iterable[models.HotlineMember]:
+    query = event.members.where(models.HotlineMember.verified == True)  # noqa
     yield from query
 
 
 def new_event_member(event: models.Event) -> models.EventMember:
-    member = models.EventMember()
+    member = models.HotlineMember()
     member.event = event
     member.verified = False
     return member
 
 
 def remove_event_member(member_id: str) -> None:
-    models.EventMember.get(models.EventMember.id == int(member_id)).delete_instance()
+    models.HotlineMember.get(models.HotlineMember.id == int(member_id)).delete_instance()
 
 
 def get_member(member_id: str) -> models.EventMember:
-    return models.EventMember.get_by_id(member_id)
+    return models.HotlineMember.get_by_id(member_id)
 
 
-def get_member_by_number(member_number) -> Optional[models.EventMember]:
+def get_member_by_number(member_number) -> Optional[models.HotlineMember]:
     try:
-        return models.EventMember.get(models.EventMember.number == member_number)
+        return models.HotlineMember.get(models.HotlineMember.number == member_number)
     except peewee.DoesNotExist:
         return None
 
 
-def find_pending_member_by_number(member_number) -> Optional[models.EventMember]:
+def find_pending_member_by_number(member_number) -> Optional[models.HotlineMember]:
     try:
-        return models.EventMember.get(
-            models.EventMember.number == member_number,
-            models.EventMember.verified == False,
+        return models.HotlineMember.get(
+            models.HotlineMember.number == member_number,
+            models.HotlineMember.verified == False,
         )  # noqa
     except peewee.DoesNotExist:
         return None

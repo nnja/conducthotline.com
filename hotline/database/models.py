@@ -80,9 +80,9 @@ Event.add_index(Event.primary_number)
 
 
 # TODO NZ: Refactor, change this name
-class EventMember(BaseModel):
+class HotlineMember(BaseModel):
     """Members are part of the hotline, but not necessarily able to edit
-    event details."""
+    hotline details."""
 
     event = peewee.ForeignKeyField(Event, backref="members")
     name = peewee.TextField()
@@ -90,8 +90,8 @@ class EventMember(BaseModel):
     verified = peewee.BooleanField()
 
 
-EventMember.add_index(EventMember.event, EventMember.verified)
-EventMember.add_index(EventMember.number, EventMember.verified)
+HotlineMember.add_index(HotlineMember.event, HotlineMember.verified)
+HotlineMember.add_index(HotlineMember.number, HotlineMember.verified)
 
 
 # TODO NZ: Refactor, change this name
