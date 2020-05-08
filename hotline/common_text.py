@@ -13,21 +13,10 @@
 # limitations under the License.
 
 
-voice_no_event = "No event was found for this number. Please reach out to the event staff directly for assistance."
+voice_no_hotline = "No hotline was found for this number."
 voice_blocked = "This number is currently unavailable."
-voice_no_members = "Unfortunately, there are no verified members for this event's hotline. Please reach out to the event staff directly for assistance."
-voice_default_greeting = "Thank you for calling the Code of Conduct hotline for {event.name}. This will dial all of the hotline members and put you on hold until one is able to answer."
-voice_answer_error = "Oh no, an error occurred and we couldn't find the event or member entry for this call."
+voice_no_members = "Unfortunately, no verified members belong to this hotline."
+voice_default_greeting = "Thank you for calling the Friend Hotline for {hotline.name}. This will dial all of the hotline members and put you on hold until one or more friends answer."
+voice_answer_error = "Oh no, an error occurred and we couldn't find the hotline for this call."
 voice_answer_announce = "{member.name} is joining this call."
-voice_answer_greeting = "Hello {member.name}, connecting you to {event.name}."
-
-sms_opt_out = (
-    "Reply STOP at any time to opt-out of receiving messages from this conversation."
-)
-sms_introduction = (
-    "This is the beginning of a new chat for {event.name}, the last 4 digits of the reporter's number are {reporter_number}."
-    + " "
-    + sms_opt_out
-)
-sms_stop_request_completed = "You've been successfully unsubscribed, you'll no longer receive messages from this number."
-sms_left_chat = "This participant has chosen to leave the chat."
+voice_answer_greeting = "Hello {member.name}, connecting you to {hotline.name}."

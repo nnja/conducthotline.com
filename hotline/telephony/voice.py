@@ -41,7 +41,7 @@ def handle_inbound_call(
     event = db.get_event_by_number(event_number)
 
     if event is None:
-        error_ncco = [{"action": "talk", "text": common_text.voice_no_event}]
+        error_ncco = [{"action": "talk", "text": common_text.voice_no_hotline}]
         return error_ncco
 
     # Make sure the number isn't blocked.
@@ -60,7 +60,7 @@ def handle_inbound_call(
     if event.voice_greeting is not None and event.voice_greeting.strip():
         greeting = event.voice_greeting
     else:
-        greeting = common_text.voice_default_greeting.format(event=event)
+        greeting = common_text.voice_default_greeting.format(hotline=event)
 
     # NCCOs to be given to the caller.
     reporter_nccos: List[dict] = []
@@ -132,7 +132,7 @@ def handle_member_answer(
         {
             "action": "talk",
             "text": common_text.voice_answer_greeting.format(
-                member=member, event=event
+                member=member, hotline=event
             ),
         },
         {
