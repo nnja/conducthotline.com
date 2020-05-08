@@ -1,7 +1,6 @@
 from unittest import mock
 
 import nexmo
-import pytest
 from hotline import injector
 from hotline.database import highlevel as db
 from hotline.telephony import verification

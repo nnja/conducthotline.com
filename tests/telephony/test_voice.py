@@ -15,7 +15,6 @@
 from unittest import mock
 
 import nexmo
-import pytest
 from hotline.telephony import voice
 from tests.telephony import helpers
 
