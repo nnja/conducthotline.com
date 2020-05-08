@@ -32,7 +32,7 @@ def test_handle_inbound_call_no_event(database):
     )
 
     assert len(ncco) == 1
-    assert "No event was found" in ncco[0]["text"]
+    assert "No hotline was found" in ncco[0]["text"]
 
 
 def test_handle_inbound_call_blocked(database):
