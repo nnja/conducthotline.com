@@ -27,7 +27,7 @@ def initialize_db(database):
     models.db.initialize(playhouse.db_url.connect(database))
 
 
-def list_events_for_user(user_id: str) -> Iterable[models.Hotline]:
+def list_hotlines_for_user(user_id: str) -> Iterable[models.Hotline]:
     query = (
         models.Hotline.select(models.Hotline.name, models.Hotline.slug)
         .join(models.HotlineAdmin)
@@ -57,9 +57,9 @@ def new_event() -> models.Hotline:
     return event
 
 
-def get_event_by_slug(event_slug: str) -> Optional[models.Hotline]:
+def get_hotline_by_slug(hotline_slug: str) -> Optional[models.Hotline]:
     try:
-        return models.Hotline.get(models.Hotline.slug == event_slug)
+        return models.Hotline.get(models.Hotline.slug == hotline_slug)
     except peewee.DoesNotExist:
         return None
 

@@ -44,7 +44,7 @@ def event_access_required(view):
 
 @blueprint.route("/e/<event_slug>")
 def info(event_slug):
-    event = db.get_event_by_slug(event_slug)
+    event = db.get_hotline_by_slug(event_slug)
 
     if event is None:
         flask.abort(404)
@@ -56,8 +56,8 @@ def info(event_slug):
 @auth_required
 def list():
     user_id = flask.g.user["user_id"]
-    events = db.list_events_for_user(user_id=user_id)
-    return flask.render_template("events/list.html", events=events)
+    hotlines = db.list_hotlines_for_user(user_id=user_id)
+    return flask.render_template("events/list.html", events=hotlines)
 
 
 @blueprint.route("/manage/events/add", methods=["GET", "POST"])
