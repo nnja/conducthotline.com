@@ -45,9 +45,6 @@ class EventEditForm(wtforms.Form):
     voice_greeting = wtforms.TextField(
         description=f"Spoken when a person calls the hotline. By default, this is <code>{common_text.voice_default_greeting}</code>."
     )
-    sms_greeting = wtforms.TextField(
-        description=f"Sent when a person texts the hotline. By default, this is <code>{common_text.sms_default_greeting}</code>."
-    )
 
 
 def validate_phone_number(form, field):

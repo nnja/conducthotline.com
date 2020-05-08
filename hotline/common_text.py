@@ -21,12 +21,6 @@ voice_answer_error = "Oh no, an error occurred and we couldn't find the event or
 voice_answer_announce = "{member.name} is joining this call."
 voice_answer_greeting = "Hello {member.name}, connecting you to {event.name}."
 
-sms_no_event = "Sorry, there doesn't seem to be an event configured for that number."
-sms_no_members = "Sorry, there aren't any organizers currently available. Please reach out to the event staff in person for assistance."
-sms_no_relays = "Sorry, there aren't any relays available to send your message. You can try calling the hotline or reaching out to the event staff in person for assistance."
-sms_default_greeting = (
-    "You have started a new chat with the organizers of {event.name}."
-)
 sms_opt_out = (
     "Reply STOP at any time to opt-out of receiving messages from this conversation."
 )

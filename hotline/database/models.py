@@ -49,7 +49,6 @@ class Number(BaseModel):
 Number.add_index(Number.number)
 
 
-# TODO NZ: Rename this. Group?
 class Hotline(BaseModel):
     # Always required stuff.
     name = peewee.TextField()
@@ -67,7 +66,6 @@ class Hotline(BaseModel):
     # website = peewee.TextField(null=True, index=False)
     # contact_email = peewee.TextField(null=True, index=False)
     # location = peewee.TextField(null=True, index=False)
-    # sms_greeting = peewee.TextField(null=True, index=False)
 
     # Customizations.
     # TODO NZ: Change the default greeting message
@@ -94,7 +92,6 @@ HotlineMember.add_index(HotlineMember.hotline, HotlineMember.verified)
 HotlineMember.add_index(HotlineMember.number, HotlineMember.verified)
 
 
-# TODO NZ: Refactor, change this name
 class HotlineAdmin(BaseModel):
     """Organizers are able to edit hotline details, but aren't necessarily part
     of the hotline."""
