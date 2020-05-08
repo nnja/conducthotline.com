@@ -138,7 +138,9 @@ def new_event_member(event: models.Hotline) -> models.HotlineMember:
 
 
 def remove_event_member(member_id: str) -> None:
-    models.HotlineMember.get(models.HotlineMember.id == int(member_id)).delete_instance()
+    models.HotlineMember.get(
+        models.HotlineMember.id == int(member_id)
+    ).delete_instance()
 
 
 def get_member(member_id: str) -> models.HotlineMember:
