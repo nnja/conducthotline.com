@@ -76,14 +76,34 @@ def test_handle_inbound_call_no_members(database):
     assert "no verified members" in ncco[0]["text"]
 
 
-def test_handle_inbound_call(database):
-    event = helpers.create_event()
-    helpers.add_members(event)
+def test_handle_inbound_call_non_member_doesnt_connect(database):
+    hotline = helpers.create_event()
+    helpers.add_members(hotline)
 
     nexmo_client = mock.create_autospec(nexmo.Client)
 
     ncco = voice.handle_inbound_call(
-        reporter_number="1234",
+        reporter_number="1234567",
+        event_number="5678",
+        conversation_uuid="conversation",
+        call_uuid="call",
+        host="example.com",
+        client=nexmo_client,
+    )
+
+    assert len(ncco) == 1
+    assert "You're not a verified member of this hotline" in ncco[0]["text"]
+
+
+def test_handle_inbound_call(database):
+    hotline = helpers.create_event()
+    members = helpers.add_members(hotline)
+    caller = members[0]
+
+    nexmo_client = mock.create_autospec(nexmo.Client)
+
+    ncco = voice.handle_inbound_call(
+        reporter_number=caller.number,
         event_number="5678",
         conversation_uuid="conversation",
         call_uuid="call",
@@ -114,7 +134,8 @@ def test_handle_inbound_call(database):
 
 def test_handle_inbound_call_custom_greeting(database):
     event = helpers.create_event()
-    helpers.add_members(event)
+    members = helpers.add_members(event)
+    caller = members[0]
 
     nexmo_client = mock.create_autospec(nexmo.Client)
 
@@ -122,7 +143,7 @@ def test_handle_inbound_call_custom_greeting(database):
     event.save()
 
     ncco = voice.handle_inbound_call(
-        reporter_number="1234",
+        reporter_number=caller.number,
         event_number="5678",
         conversation_uuid="conversation",
         call_uuid="call",

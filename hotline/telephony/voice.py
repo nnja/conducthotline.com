@@ -56,6 +56,12 @@ def handle_inbound_call(
         error_ncco = [{"action": "talk", "text": common_text.voice_no_members}]
         return error_ncco
 
+    # Make sure that the user is a verified member of this hotline.
+    # If not, bounce them.
+    if not db.get_verified_member_for_event_by_number(event, reporter_number):
+        error_ncco = [{"action": "talk", "text": common_text.voice_non_member}]
+        return error_ncco
+
     # Great, we have an event. Greet the user.
     if event.voice_greeting is not None and event.voice_greeting.strip():
         greeting = event.voice_greeting
