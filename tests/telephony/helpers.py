@@ -3,7 +3,7 @@ from hotline.database import models as db
 
 def create_event(create_primary_number=True):
     number = db.Number()
-    number.number = "5678"
+    number.number = "+5678"
     number.country = "US"
     number.features = ""
     number.save()

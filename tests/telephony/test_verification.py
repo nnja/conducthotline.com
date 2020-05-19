@@ -29,7 +29,7 @@ def test_start_member_verification(sleep, database):
     )
 
     client.send_message.assert_called_once_with(
-        {"from": event.primary_number, "to": member.number, "text": expected_msg}
+        {"from": "5678", "to": member.number, "text": expected_msg}
     )
 
 
@@ -84,7 +84,7 @@ def test_handle_verification_affirmative_message(sleep, database):
 
         expected_msg = "Thank you, your number is confirmed."
         client.send_message.assert_called_with(
-            {"from": event.primary_number, "to": member.number, "text": expected_msg}
+            {"from": "5678", "to": member.number, "text": expected_msg}
         )
 
 

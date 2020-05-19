@@ -25,7 +25,7 @@ def test_handle_inbound_call_no_event(database):
 
     ncco = voice.handle_inbound_call(
         reporter_number="1234",
-        event_number="5678",
+        event_number="+5678",
         conversation_uuid="conversation",
         call_uuid="call",
         host="example.com",
@@ -46,7 +46,7 @@ def test_handle_inbound_call_blocked(database):
 
     ncco = voice.handle_inbound_call(
         reporter_number="1234",
-        event_number="5678",
+        event_number="+5678",
         conversation_uuid="conversation",
         call_uuid="call",
         host="example.com",
@@ -65,7 +65,7 @@ def test_handle_inbound_call_no_members(database):
 
     ncco = voice.handle_inbound_call(
         reporter_number="1234",
-        event_number="5678",
+        event_number="+5678",
         conversation_uuid="conversation",
         call_uuid="call",
         host="example.com",
@@ -84,7 +84,7 @@ def test_handle_inbound_call_non_member_doesnt_connect(database):
 
     ncco = voice.handle_inbound_call(
         reporter_number="1234567",
-        event_number="5678",
+        event_number="+5678",
         conversation_uuid="conversation",
         call_uuid="call",
         host="example.com",
@@ -104,7 +104,7 @@ def test_handle_inbound_call(database):
 
     ncco = voice.handle_inbound_call(
         reporter_number=caller.number,
-        event_number="5678",
+        event_number="+5678",
         conversation_uuid="conversation",
         call_uuid="call",
         host="example.com",
@@ -144,7 +144,7 @@ def test_handle_inbound_call_custom_greeting(database):
 
     ncco = voice.handle_inbound_call(
         reporter_number=caller.number,
-        event_number="5678",
+        event_number="+5678",
         conversation_uuid="conversation",
         call_uuid="call",
         host="example.com",
@@ -160,7 +160,7 @@ def test_handle_member_answer_no_event(database):
     nexmo_client = mock.create_autospec(nexmo.Client)
 
     ncco = voice.handle_member_answer(
-        event_number="5678",
+        event_number="+5678",
         member_number="202",
         origin_conversation_uuid="conversation",
         origin_call_uuid="call",
@@ -179,7 +179,7 @@ def test_handle_member_answer(database):
     nexmo_client = mock.create_autospec(nexmo.Client)
 
     ncco = voice.handle_member_answer(
-        event_number="5678",
+        event_number="+5678",
         member_number="202",
         origin_conversation_uuid="conversation",
         origin_call_uuid="call",
