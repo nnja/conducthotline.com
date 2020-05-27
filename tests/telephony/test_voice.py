@@ -59,12 +59,14 @@ def test_handle_inbound_call_blocked(database):
 
 def test_handle_inbound_call_no_members(database):
     event = helpers.create_event()
+
+    helpers.add_member(event=event, name="Nancy", number="101")
     helpers.add_unverfied_members(event)
 
     nexmo_client = mock.create_autospec(nexmo.Client)
 
     ncco = voice.handle_inbound_call(
-        reporter_number="1234",
+        reporter_number="101",
         event_number="+5678",
         conversation_uuid="conversation",
         call_uuid="call",
@@ -119,17 +121,15 @@ def test_handle_inbound_call(database):
     assert ncco[1]["action"] == "conversation"
     assert ncco[1]["name"] == "conversation"
 
-    # The nexmo client should have been used to call the two organizers.
-    assert nexmo_client.create_call.call_count == 2
+    # The nexmo client should have been used to call the other
+    # member of the hotline, excluding the original caller.
+    assert nexmo_client.create_call.call_count == 1
 
     calls_created = [call[1][0] for call in nexmo_client.create_call.mock_calls]
 
-    assert calls_created[0]["to"] == [{"type": "phone", "number": "101"}]
+    assert calls_created[0]["to"] == [{"type": "phone", "number": "202"}]
     assert calls_created[0]["from"] == {"type": "phone", "number": "5678"}
     assert "example.com" in calls_created[0]["answer_url"][0]
-    assert calls_created[1]["to"] == [{"type": "phone", "number": "202"}]
-    assert calls_created[1]["from"] == {"type": "phone", "number": "5678"}
-    assert "example.com" in calls_created[1]["answer_url"][0]
 
 
 def test_handle_inbound_call_custom_greeting(database):

@@ -49,17 +49,18 @@ def handle_inbound_call(
         error_ncco = [{"action": "talk", "text": common_text.voice_blocked}]
         return error_ncco
 
-    # Get the members for the event. If there are no members, tell the user. :(
-    event_members = list(db.get_verified_event_members(event))
+    # Make sure that the user is a verified member of this hotline.
+    # If not, bounce them.
+    if not db.get_verified_member_for_event_by_number(event, number=reporter_number):
+        error_ncco = [{"action": "talk", "text": common_text.voice_non_member}]
+        return error_ncco
+    
+    # Get the members for the event, excluding the current caller.
+    # If there are no members, tell the user. :(
+    event_members = list(db.get_verified_event_members_except_caller(event, number=reporter_number))
 
     if not event_members:
         error_ncco = [{"action": "talk", "text": common_text.voice_no_members}]
-        return error_ncco
-
-    # Make sure that the user is a verified member of this hotline.
-    # If not, bounce them.
-    if not db.get_verified_member_for_event_by_number(event, reporter_number):
-        error_ncco = [{"action": "talk", "text": common_text.voice_non_member}]
         return error_ncco
 
     # Great, we have an event. Greet the user.
