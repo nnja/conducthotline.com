@@ -22,36 +22,45 @@ def create_event(create_primary_number=True):
     return event
 
 
+def add_member(event, name, number, verified=True):
+
+    member = db.EventMember()
+    member.name = name
+    member.number = number
+    member.event = event
+    member.verified = verified
+    member.save()
+    return member
+    
+
 # TODO NZ: rename method to member (single)
 # TODO NZ: fix verified spelled wrong
 def add_unverfied_members(event):
-    member = db.EventMember()
-    member.name = "Unverified Judy"
-    member.number = "303"
-    member.event = event
-    member.verified = False
-    member.save()
-
+    member = add_member(
+        event=event,
+        name="Unverified Judy",
+        number="303",
+        verified=False,
+    )
     return member
 
 
 def add_members(event):
     members = []
 
-    member = db.EventMember()
-    member.name = "Bob"
-    member.number = "101"
-    member.event = event
-    member.verified = True
-    member.save()
+    member = add_member(
+        event=event,
+        name="Bob",
+        number="101",
+    )
     members.append(member)
 
-    member = db.EventMember()
-    member.name = "Alice"
-    member.number = "202"
-    member.event = event
-    member.verified = True
-    member.save()
+    member = add_member(
+        event=event,
+        name="Alice",
+        number="202",
+    )
+
     members.append(member)
 
     return members
