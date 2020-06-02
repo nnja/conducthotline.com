@@ -39,9 +39,7 @@ def list():
         on=(models.Event.primary_number_id == models.Number.id),
     )
 
-    return flask.render_template(
-        "numberadmin/list.html", numbers=numbers
-    )
+    return flask.render_template("numberadmin/list.html", numbers=numbers)
 
 
 @blueprint.route("/admin/numbers/<number>/details")
@@ -61,10 +59,7 @@ def details(number):
     info = hotline.telephony.lowlevel.get_number_info(number)
 
     return flask.render_template(
-        "numberadmin/details.html",
-        number=number_entry,
-        event=event,
-        info=info,
+        "numberadmin/details.html", number=number_entry, event=event, info=info,
     )
 
 
