@@ -23,7 +23,6 @@ import phonenumbers
 from google.api_core import retry
 from hotline import injector
 
-
 logger = logging.getLogger(__name__)
 
 

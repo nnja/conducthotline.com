@@ -54,10 +54,12 @@ def handle_inbound_call(
     if not db.get_verified_member_for_event_by_number(event, number=reporter_number):
         error_ncco = [{"action": "talk", "text": common_text.voice_non_member}]
         return error_ncco
-    
+
     # Get the members for the event, excluding the current caller.
     # If there are no members, tell the user. :(
-    event_members = list(db.get_verified_event_members_except_caller(event, number=reporter_number))
+    event_members = list(
+        db.get_verified_event_members_except_caller(event, number=reporter_number)
+    )
 
     if not event_members:
         error_ncco = [{"action": "talk", "text": common_text.voice_no_members}]

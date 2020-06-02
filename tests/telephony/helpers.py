@@ -31,16 +31,13 @@ def add_member(event, name, number, verified=True):
     member.verified = verified
     member.save()
     return member
-    
+
 
 # TODO NZ: rename method to member (single)
 # TODO NZ: fix verified spelled wrong
 def add_unverfied_members(event):
     member = add_member(
-        event=event,
-        name="Unverified Judy",
-        number="303",
-        verified=False,
+        event=event, name="Unverified Judy", number="303", verified=False,
     )
     return member
 
@@ -48,18 +45,10 @@ def add_unverfied_members(event):
 def add_members(event):
     members = []
 
-    member = add_member(
-        event=event,
-        name="Bob",
-        number="101",
-    )
+    member = add_member(event=event, name="Bob", number="101",)
     members.append(member)
 
-    member = add_member(
-        event=event,
-        name="Alice",
-        number="202",
-    )
+    member = add_member(event=event, name="Alice", number="202",)
 
     members.append(member)
 

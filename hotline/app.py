@@ -101,6 +101,7 @@ def add_csrf_field_processor():
 def index():
     return flask.redirect(flask.url_for("pages.view_page", name="about"))
 
+
 @app.route("/robots.txt")
 def robots():
     return flask.redirect(flask.url_for("static", name="robots.txt"))

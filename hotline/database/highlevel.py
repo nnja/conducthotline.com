@@ -126,11 +126,8 @@ def get_event_members(event) -> Iterable[models.EventMember]:
 
 
 def get_verified_member_for_event_by_number(event, number: int) -> models.EventMember:
-    return (
-        models.EventMember.get_or_none(
-            (models.EventMember.verified == True) 
-            & (models.EventMember.number == number)
-        )
+    return models.EventMember.get_or_none(
+        (models.EventMember.verified == True) & (models.EventMember.number == number)
     )
 
 
@@ -139,11 +136,12 @@ def get_verified_event_members(event) -> Iterable[models.EventMember]:
     yield from query
 
 
-def get_verified_event_members_except_caller(event, number: int) -> Iterable[models.EventMember]:
+def get_verified_event_members_except_caller(
+    event, number: int
+) -> Iterable[models.EventMember]:
     query = event.members.where(
-        (models.EventMember.verified == True) 
-        & (models.EventMember.number != number)
-    )        
+        (models.EventMember.verified == True) & (models.EventMember.number != number)
+    )
     yield from query
 
 
