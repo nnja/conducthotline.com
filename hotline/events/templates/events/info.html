@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block html_title %}{{event.name}} FriendHotline.com{% endblock %}
+{% block html_title %}{{hotline.name}} FriendHotline.com{% endblock %}
 
 {% block html_body %}
 
@@ -11,16 +11,16 @@
         FriendHotline.com - Reach Your Friends
       </h2>
       <h1 class="title">
-        {{event.name|e}}
+        {{hotline.name|e}}
       </h1>
-      {% if event.primary_number %}
+      {% if hotline.primary_number %}
       <div class="info-section">
         <p>
           <strong>If you're a member call:</strong>
         </p>  
         <p class="is-size-1">
-          <a class="" href="tel:{{event.primary_number|e|phone}}">
-            {{event.primary_number|e|phone}}
+          <a class="" href="tel:{{hotline.primary_number|e|phone}}">
+            {{hotline.primary_number|e|phone}}
           </a>
         </p>
       </div>
@@ -34,11 +34,11 @@
         </p>
       </div>
       {% endif %}
-      {% if event.contact_email %}
+      {% if hotline.contact_email %}
       <div class="info-section">
         <p class="is-size-4">
-          <a class="" href="mailto:{{event.contact_email|e}}">
-            {{event.contact_email|e}}
+          <a class="" href="mailto:{{hotline.contact_email|e}}">
+            {{hotline.contact_email|e}}
           </a>
         </p>
         <p>
