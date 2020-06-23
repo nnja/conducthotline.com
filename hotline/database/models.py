@@ -61,11 +61,14 @@ class Event(BaseModel):
     primary_number_id = peewee.ForeignKeyField(Number, null=True)
     country = peewee.CharField(default="US")
 
+    # TODO NZ: add contact_email back in, make displaying
+    # contact email on the hotline page optional
+
+    # contact_email = peewee.TextField(null=True, index=False)
     # TODO NZ: pull these out of the code
     # Information fields.
     # coc_link = peewee.TextField(null=True, index=False)
     # website = peewee.TextField(null=True, index=False)
-    # contact_email = peewee.TextField(null=True, index=False)
     # location = peewee.TextField(null=True, index=False)
     # sms_greeting = peewee.TextField(null=True, index=False)
 

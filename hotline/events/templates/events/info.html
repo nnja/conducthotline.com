@@ -1,46 +1,44 @@
 {% extends "layout.html" %}
 
-{% block html_title %}{{event.name}} Code of Conduct Hotline{% endblock %}
+{% block html_title %}{{hotline.name}} FriendHotline.com{% endblock %}
 
 {% block html_body %}
 
 <section class="event-info hero is-primary is-fullheight">
   <div class="hero-body">
     <div class="container has-text-centered is-large">
-      <h1 class="title">
-        {{event.name|e}}
-      </h1>
       <h2 class="subtitle">
-        Code of Conduct Hotline
+        FriendHotline.com - Reach Your Friends
       </h2>
-
-      {% if event.primary_number %}
+      <h1 class="title">
+        {{hotline.name|e}}
+      </h1>
+      {% if hotline.primary_number %}
       <div class="info-section">
-        <p class="is-size-1">
-          <a class="" href="tel:{{event.primary_number|e|phone}}">
-            {{event.primary_number|e|phone}}
-          </a>
-        </p>
         <p>
-          <strong>Call</strong> or <strong>Text</strong>
+          <strong>If you're a member call:</strong>
+        </p>  
+        <p class="is-size-1">
+          <a class="" href="tel:{{hotline.primary_number|e|phone}}">
+            {{hotline.primary_number|e|phone}}
+          </a>
         </p>
       </div>
       {% else %}
       <div class="info-section">
         <p class="is-size-1">
-          No number configured
+          No number configured.
         </p>
         <p>
-          Contact the event organizers for assistance
+          Contact the hotline organizer for help.
         </p>
       </div>
       {% endif %}
-
-      {% if event.contact_email %}
+      {% if hotline.contact_email %}
       <div class="info-section">
         <p class="is-size-4">
-          <a class="" href="mailto:{{event.contact_email|e}}">
-            {{event.contact_email|e}}
+          <a class="" href="mailto:{{hotline.contact_email|e}}">
+            {{hotline.contact_email|e}}
           </a>
         </p>
         <p>
@@ -48,30 +46,6 @@
         </p>
       </div>
       {% endif %}
-
-      <div class="info-section">
-        {% if event.location %}
-        <p>
-          {{event.location|e}}
-        </p>
-        {% endif %}
-
-        <p>
-          {% if event.coc_link %}
-            <a href="{{event.coc_link|e}}" target="_blank" rel="nofollower">
-              Code of Conduct
-            </a>
-          {% endif %}
-          {% if event.coc_link and event.website %}
-            &middot;
-          {% endif %}
-          {% if event.website %}
-            <a href="{{event.website|e}}" target="_blank" rel="nofollower">
-              Website
-            </a>
-          {% endif %}
-        </p>
-      </div>
     </div>
   </div>
 

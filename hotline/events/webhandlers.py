@@ -44,12 +44,13 @@ def event_access_required(view):
 
 @blueprint.route("/e/<event_slug>")
 def info(event_slug):
-    event = db.get_event_by_slug(event_slug)
+    hotline = db.get_event_by_slug(event_slug)
 
-    if event is None:
+    if hotline is None:
         flask.abort(404)
 
-    return flask.render_template("events/info.html", event=event)
+    # TODO NZ: rename the template module later.
+    return flask.render_template("events/info.html", hotline=hotline)
 
 
 @blueprint.route("/manage/events")
