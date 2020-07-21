@@ -102,6 +102,7 @@ def handle_inbound_call(
                     f"https://{host}/telephony/connect-to-conference/{conversation_uuid}/{call_uuid}"
                 ],
                 "answer_method": "POST",
+                "machine_detection": "hangup",
             }
         )
 
